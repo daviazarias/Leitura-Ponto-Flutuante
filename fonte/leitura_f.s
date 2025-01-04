@@ -85,15 +85,13 @@ ler_string:
 # ponto flutuante de precisão simples (4 bytes), devolvido pela função em %xmm0.
 
 conv:
-    pushq %rbp                  # 
-    movq %rsp, %rbp             # Abertura da função. Aumenta a pilha em 16 bytes.
-    subq $16, %rsp              #
+    pushq %rbp                  # Abertura da função.
 
-    movl $0, (%rsp)             # %xmm0 acumula o resultado.
-    cvtsi2ss (%rsp), %xmm0      #
+    movl $0, %eax               # %xmm0 acumula o resultado.
+    cvtsi2ss %eax, %xmm0        #
 
-    movl $1, 4(%rsp)            # %xmm1 recebe o contador de casas decimais do número.
-    cvtsi2ss 4(%rsp), %xmm1     # (Inicia em 1 e é multiplicado por 10 a cada casa decimal lida).
+    movl $1, %eax               # %xmm1 recebe o contador de casas decimais do número.
+    cvtsi2ss %eax, %xmm1        # (Inicia em 1 e é multiplicado por 10 a cada casa decimal lida).
 
     movl $48, %eax              # %xmm2 contém o valor 48.
     cvtsi2ss %eax, %xmm2
@@ -157,6 +155,5 @@ conv:
     mulss %xmm1, %xmm0          #    
 
 .fim:
-    addq $16, %rsp              # 
     popq %rbp                   # Encerrando a função. Resultado em %xmm0.
     ret                         # 
